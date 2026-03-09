@@ -14,7 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-df = pd.read_csv('/content/Loan_Prediction_Dataset.csv')
+df = pd.read_csv('Loan_Prediction_Dataset.csv')
 
 df
 
