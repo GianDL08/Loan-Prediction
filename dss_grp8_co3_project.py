@@ -717,7 +717,7 @@ df = df.drop(columns=['loan_status'])
 """###Data Imputation"""
 
 #NaN (problematic) values that occured due to logarithmic transformation
-
+# display(df.isnull().sum())
 
 # Identify columns with NaN values
 nan_cols = df.columns[df.isnull().any()].tolist()
@@ -727,7 +727,7 @@ for col in nan_cols:
     median_val = df[col].median()
     df[col].fillna(median_val, inplace=True)
 
-display(df.isnull().sum())
+# display(df.isnull().sum())
 
 df
 
