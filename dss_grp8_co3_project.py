@@ -14,6 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import sklearn as sk
+import streamlit as st
 
 df = pd.read_csv('Loan_Prediction_Dataset.csv')
 
