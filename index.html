@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loan Prediction Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Loan Prediction</div>
+    <nav class="tabs" role="navigation" aria-label="Main navigation">
+      <button class="tab active" data-target="home">Home</button>
+      <button class="tab" data-target="data-cleaning">Data Cleaning</button>
+      <button class="tab" data-target="eda">EDA</button>
+      <button class="tab" data-target="preprocessing">Preprocessing</button>
+      <button class="tab" data-target="modeling">Modeling</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- Home / Prediction View -->
+    <section id="home" class="page active">
+      <div class="page-header">
+        <h1>Loan Approval Prediction</h1>
+        <p class="lead">
+          This dashboard demonstrates the machine learning workflow for predicting whether a loan will be approved.
+          Use the sidebar to enter applicant data and click <strong>Predict</strong> to see a simulated outcome.
+        </p>
+      </div>
+
+      <div class="layout">
+        <aside class="sidebar">
+          <h2>Application input</h2>
+          <p class="hint">Enter the applicant's profile to estimate loan approval.</p>
+
+          <form id="predictForm" class="form" autocomplete="off">
+            <div class="row">
+              <label for="gender">Gender</label>
+              <select id="gender" name="gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <label for="married">Married</label>
+              <select id="married" name="married">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <label for="dependents">Dependents</label>
+              <select id="dependents" name="dependents">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3+</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <label for="education">Education</label>
+              <select id="education" name="education">
+                <option value="Graduate">Graduate</option>
+                <option value="Not Graduate">Not Graduate</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <label for="selfEmployed">Self Employed</label>
+              <select id="selfEmployed" name="selfEmployed">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <label for="applicantIncome">Applicant Income</label>
+              <input id="applicantIncome" name="applicantIncome" type="number" min="0" step="100" value="5000" />
+            </div>
+
+            <div class="row">
+              <label for="coapplicantIncome">Coapplicant Income</label>
+              <input id="coapplicantIncome" name="coapplicantIncome" type="number" min="0" step="100" value="0" />
+            </div>
+
+            <div class="row">
+              <label for="loanAmount">Loan Amount (in thousands)</label>
+              <input id="loanAmount" name="loanAmount" type="number" min="1" step="1" value="100" />
+            </div>
+
+            <div class="row">
+              <label for="loanTerm">Loan term (months)</label>
+              <input id="loanTerm" name="loanTerm" type="number" min="12" step="12" value="360" />
+            </div>
+
+            <div class="row">
+              <label for="creditHistory">Credit History</label>
+              <select id="creditHistory" name="creditHistory">
+                <option value="1">1 (Good)</option>
+                <option value="0">0 (Poor)</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <label for="propertyArea">Property Area</label>
+              <select id="propertyArea" name="propertyArea">
+                <option value="Urban">Urban</option>
+                <option value="Semiurban">Semiurban</option>
+                <option value="Rural">Rural</option>
+              </select>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="primary">Predict</button>
+              <button type="button" id="resetBtn">Reset</button>
+            </div>
+          </form>
+
+          <div class="prediction" aria-live="polite">
+            <h3>Prediction</h3>
+            <div id="predictionResult" class="result">
+              Fill out the form and click <strong>Predict</strong> to see a result.
+            </div>
+          </div>
+        </aside>
+
+        <section class="content">
+          <h2>How this works</h2>
+          <p>
+            This project demonstrates a standard data science lifecycle: clean your data, explore relationships in the data, preprocess for modeling, train a model, and evaluate results.
+          </p>
+
+          <h3>What you can do here</h3>
+          <ul>
+            <li>Navigate the tabs to learn more about each stage</li>
+            <li>Use the sidebar to simulate an applicant profile</li>
+            <li>See a quick prediction based on simple rules in JavaScript</li>
+          </ul>
+
+          <h3>Next steps (future work)</h3>
+          <ul>
+            <li>Hook the form up to a real model served by a backend</li>
+            <li>Visualize EDA charts and model performance metrics</li>
+            <li>Persist user inputs and predictions for audit/tracking</li>
+          </ul>
+        </section>
+      </div>
+    </section>
+
+    <!-- Data Cleaning -->
+    <section id="data-cleaning" class="page">
+      <div class="page-header">
+        <h1>Data Cleaning</h1>
+        <p class="lead">
+          Data cleaning (also called data wrangling or preprocessing) is the first step in the data science lifecycle.
+          It involves handling missing or inconsistent values, standardizing formats, and removing duplicate or irrelevant records.
+        </p>
+      </div>
+
+      <div class="content">
+        <h2>Common steps</h2>
+        <ul>
+          <li>Inspect the data for missing values and outliers</li>
+          <li>Impute missing values using appropriate strategies (mean, median, mode)</li>
+          <li>Normalize or standardize numeric features as needed</li>
+          <li>Encode categorical variables so the model can interpret them</li>
+          <li>Remove duplicates and check consistency across columns</li>
+        </ul>
+
+        <p>
+          In this project, the dataset is first cleaned by standardizing column names, replacing missing values, and converting data types.
+          The next steps are to explore relationships between features and prepare the dataset for modeling.
+        </p>
+
+        <div class="api-output" id="cleaningSummary"></div>
+      </div>
+    </section>
+
+    <!-- EDA -->
+    <section id="eda" class="page">
+      <div class="page-header">
+        <h1>Exploratory Data Analysis (EDA)</h1>
+        <p class="lead">
+          EDA helps you understand the structure of the dataset and the relationships between features before training a model.
+        </p>
+      </div>
+
+      <div class="content">
+        <h2>Key questions</h2>
+        <ul>
+          <li>How are the features distributed?</li>
+          <li>Which features correlate most strongly with the target (loan status)?</li>
+          <li>Are there imbalances or outliers that could affect model training?</li>
+        </ul>
+
+        <p>
+          Typically, you will visualize the data using histograms, bar charts, and scatter plots — and compute summary statistics (mean, median, variance, etc.).
+          These insights guide feature engineering and modeling decisions.
+        </p>
+
+        <div class="api-output" id="edaSummary"></div>
+      </div>
+    </section>
+
+    <!-- Preprocessing -->
+    <section id="preprocessing" class="page">
+      <div class="page-header">
+        <h1>Data Preprocessing</h1>
+        <p class="lead">
+          Preprocessing transforms the cleaned data into a format suitable for machine learning algorithms.
+        </p>
+      </div>
+
+      <div class="content">
+        <h2>Typical preprocessing steps</h2>
+        <ul>
+          <li>Encode categorical variables (one-hot, ordinal encoding)</li>
+          <li>Scale numeric features (standardization, normalization)</li>
+          <li>Create derived features to expose new patterns</li>
+          <li>Split the dataset into training, validation, and test sets</li>
+        </ul>
+
+        <p>
+          This stage is crucial to ensure the model is trained on data that is representative, clean, and properly formatted.
+        </p>
+      </div>
+    </section>
+
+    <!-- Modeling -->
+    <section id="modeling" class="page">
+      <div class="page-header">
+        <h1>Modeling</h1>
+        <p class="lead">
+          Model training takes preprocessed data and learns patterns that map inputs to the target (loan status).
+        </p>
+      </div>
+
+      <div class="content">
+        <h2>Typical model workflow</h2>
+        <ul>
+          <li>Choose an algorithm (logistic regression, tree-based models, etc.)</li>
+          <li>Train the model on a training dataset</li>
+          <li>Validate on a holdout/validation set</li>
+          <li>Evaluate performance using metrics like accuracy, precision, recall, and ROC-AUC</li>
+        </ul>
+
+        <p>
+          This demo uses a simple rule-based predictor in the browser for quick feedback.
+          In a complete implementation, the prediction would be driven by a trained model exposed via an API.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Loan Prediction Demo • Built with HTML, CSS &amp; JavaScript</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
