@@ -717,7 +717,7 @@ df = df.drop(columns=['loan_status'])
 """###Data Imputation"""
 
 #NaN (problematic) values that occured due to logarithmic transformation
-display(df.isnull().sum())
+
 
 # Identify columns with NaN values
 nan_cols = df.columns[df.isnull().any()].tolist()
