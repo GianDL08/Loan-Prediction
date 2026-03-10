@@ -139,7 +139,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the gender distribution within a specific dataset. It was generated using Python’s Seaborn and Matplotlib libraries to provide a clear visual count of the "Male" and "Female" categories.
 
@@ -167,7 +167,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the distribution of marital status within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries to provide a clear visual count of the "No" and "Yes" categories.
 
@@ -195,7 +195,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the Distribution of Dependents within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries, utilizing a "viridis" color palette and data annotations to display exact counts for each category.
 
@@ -227,7 +227,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the Distribution of Education within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries to provide a visual breakdown of educational attainment levels.
 
@@ -255,7 +255,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the Distribution of Self-Employed status within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries to provide a visual count of the "No" and "Yes" categories.
 
@@ -284,7 +284,7 @@ for p in ax.patches:
                     ha='center', va='center', fontsize=9, color='black', xytext=(0, 5),
                     textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This histogram illustrates the Distribution of Applicant Income within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries, featuring a Kernel Density Estimate (KDE) line to show the shape of the data distribution.
 
@@ -315,7 +315,7 @@ for p in ax.patches:
                     ha='center', va='center', fontsize=9, color='black', xytext=(0, 5),
                     textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This histogram illustrates the Distribution of Coapplicant Income within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries, including a Kernel Density Estimate (KDE) line to visualize the probability density of the income levels.
 
@@ -346,7 +346,7 @@ for p in ax.patches:
                     ha='center', va='center', fontsize=9, color='black', xytext=(0, 5),
                     textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This histogram illustrates the Distribution of Loan Amount within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries, including a Kernel Density Estimate (KDE) line to represent the probability density of the requested loan sizes.
 
@@ -376,7 +376,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the Distribution of Loan Amount Term (in months) within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries with the "viridis" palette and exact data labels.
 
@@ -406,7 +406,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the Distribution of Credit History within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries to provide a visual count of applicants who meet credit guidelines versus those who do not.
 
@@ -434,7 +434,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the Distribution of Property Area within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries, using the "viridis" palette to categorize and count the different types of residential locations.
 
@@ -464,7 +464,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the Distribution of Loan Status within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries to visualize the final outcome of loan applications.
 
@@ -494,7 +494,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Married and Loan Statsus"""
 
@@ -509,7 +509,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Dependents and Loan Status"""
 
@@ -524,7 +524,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Education vs Loan Status"""
 
@@ -539,7 +539,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Applicant Income and Loan Status"""
 
@@ -549,7 +549,7 @@ ax.set_xticklabels(['Approved', 'Not Approved'])
 plt.title('Loan Status by Applicant Income')
 plt.xlabel('Loan Status')
 plt.ylabel('Applicant Income')
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Self Employed and Loan Status"""
 
@@ -573,7 +573,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Coapplicant Income and Loan Status"""
 
@@ -582,7 +582,7 @@ ax = sns.boxplot(data=df, x='loan_status', y='coapplicant_income', palette='viri
 plt.title('Loan Status by Coapplicant Income')
 plt.xlabel('Loan Status')
 plt.ylabel('Coapplicant Income')
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Loan Amount and Loan Status"""
 
@@ -591,7 +591,7 @@ ax = sns.boxplot(data=df, x='loan_status', y='loan_amount', palette='viridis')
 plt.title('Loan Status by Loan Amount')
 plt.xlabel('Loan Status')
 plt.ylabel('Loan Amount')
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Credit History and Loan Status"""
 
@@ -606,7 +606,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """### Property Area and Loan Status"""
 
@@ -621,7 +621,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """##Multivariate Analysis
 
@@ -654,7 +654,7 @@ sns.heatmap(
     linewidths=.5
 )
 plt.title('Correlation Heatmap of Financial Variables and Loan Status')
-plt.show()
+st.pyplot(plt.gcf())
 
 """#**Data Preprocessing**
 
