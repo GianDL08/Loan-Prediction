@@ -296,12 +296,23 @@ Higher importance means the model relies more heavily on that feature when makin
     st.pyplot(fig)
 
     st.markdown("---")
-    st.subheader("How to interpret this chart")
+    st.subheader("Interpretation of feature importances")
     st.markdown(
         """
-- Taller bars indicate features that the model considers more important when making loan approval predictions.
-- Features with near-zero importance are effectively ignored by the model.
-- Remember: feature importance is model-specific and does not imply causal relationships.
+Below are some general interpretations of the features shown in the chart. The model uses these to decide whether a loan will be approved.
+
+- **Total income**: Higher income often makes approval more likely, since it indicates greater ability to repay.
+- **Loan amount**: Larger loans typically make approval harder, since they increase repayment burden.
+- **Loan term**: Longer terms can reduce monthly payment pressure, but may also increase risk.
+- **Credit history**: A positive credit history is usually the strongest indicator of approval.
+- **Debt-to-income ratio**: Higher ratios mean the applicant may be over-leveraged, reducing approval chances.
+- **Dependents**: More dependents can reduce approval likelihood because it increases living expenses.
+- **Married**: Married applicants often have slightly higher approval rates due to more stable household finances.
+- **Education**: Graduates may be seen as lower risk compared to non-graduates.
+- **Self employed**: Self-employed applicants can be seen as riskier due to income variability.
+- **Property area**: Applicants from urban/semiurban areas may have different risk profiles than rural applicants.
+
+Keep in mind that the importance values are specific to this model and dataset; they show what the model learned as useful signals, not causal relationships.
 """
     )
 
