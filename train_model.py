@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
@@ -49,30 +50,48 @@ def load_and_clean_data(path: str) -> pd.DataFrame:
         df.loc[:, "dependents"] = pd.to_numeric(df["dependents"], errors="coerce")
         df.loc[:, "dependents"] = df["dependents"].fillna(df["dependents"].median())
 
+    # Ensure we don't have missing income values
+    for col in ["applicant_income", "coapplicant_income"]:
+        if col in df.columns:
+            df.loc[:, col] = df[col].fillna(df[col].median())
+
     num_median_cols = ["loan_amount", "loan_amount_term"]
     for col in num_median_cols:
         if col in df.columns:
             df.loc[:, col] = df[col].fillna(df[col].median())
 
+    # Create derived features and apply transformations that match the notebook
+    if "applicant_income" in df.columns and "coapplicant_income" in df.columns:
+        df["total_income"] = df["applicant_income"] + df["coapplicant_income"]
+
+    for col in ["applicant_income", "coapplicant_income", "total_income", "loan_amount"]:
+        if col in df.columns:
+            df.loc[:, col] = np.log1p(df[col])
+
     # Force types
     if "credit_history" in df.columns:
         df["credit_history"] = df["credit_history"].astype("Int64")
+
+    # Drop columns that should not be used in modelling
+    for col in ["loan_id", "gender"]:
+        if col in df.columns:
+            df = df.drop(columns=[col])
 
     return df
 
 
 def build_pipeline() -> Pipeline:
     numeric_features = [
+        "dependents",
         "applicant_income",
         "coapplicant_income",
+        "total_income",
         "loan_amount",
         "loan_amount_term",
-        "dependents",
         "credit_history",
     ]
 
     categorical_features = [
-        "gender",
         "married",
         "education",
         "self_employed",
@@ -91,7 +110,7 @@ def build_pipeline() -> Pipeline:
             ("imputer", SimpleImputer(strategy="most_frequent")),
             (
                 "encoder",
-                OneHotEncoder(handle_unknown="ignore", sparse_output=False),
+                OneHotEncoder(handle_unknown="ignore", drop="first", sparse_output=False),
             ),
         ]
     )
