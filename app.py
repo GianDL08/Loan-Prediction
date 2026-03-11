@@ -148,7 +148,7 @@ Provide the applicant profile below and click **Predict** to see the model's loa
                 "Loan Amount (in thousands)", min_value=0.0, value=100.0, step=10.0
             )
             loan_term = st.number_input(
-                "Loan Amount Term (in months)", min_value=0.0, value=360.0, step=12.0
+                "Loan Amount Term (in days)", min_value=0.0, value=360.0, step=12.0
             )
             credit_history = st.selectbox(
                 "Credit History", options=[0, 1], index=1
