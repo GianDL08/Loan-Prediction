@@ -156,6 +156,7 @@ Provide the applicant profile below and click **Predict** to see the model's loa
         approve_pct = result['approve_probability'] * 100
         reject_pct = result['reject_probability'] * 100
         confidence_pct = result['selected_probability'] * 100
+
         # A simple risk tier based on approval probability.
         if approve_pct >= 80:
             risk_tier = "Low"
@@ -166,11 +167,37 @@ Provide the applicant profile below and click **Predict** to see the model's loa
         else:
             risk_tier = "Very high"
 
+        # Risk score: higher = more risky
+        risk_score = 100 - approve_pct
+
+        # Map risk score to a color gradient (green -> yellow -> red)
+        def _risk_color(score: float) -> str:
+            # Normalize to 0..1
+            t = max(0.0, min(1.0, score / 100.0))
+            # Use a simple green->yellow->red gradient
+            if t < 0.5:
+                # green to yellow
+                r = int(255 * (t * 2))
+                g = 255
+            else:
+                # yellow to red
+                r = 255
+                g = int(255 * (1 - (t - 0.5) * 2))
+            b = 0
+            return f"rgb({r},{g},{b})"
+
+        risk_color = _risk_color(risk_score)
+
         st.write(f"**Approval confidence:** {confidence_pct:.1f}%")
         st.write(f"**Approval probability:** {approve_pct:.1f}%")
         st.write(f"**Rejection probability:** {reject_pct:.1f}%")
-        st.write(
-            f"**Risk estimate (if accepted):** {100 - approve_pct:.1f}% ({risk_tier} risk)"
+
+        # Display risk as a highlighted badge / bar
+        st.markdown(
+            f"<div style='padding:12px;border-radius:10px;background: {risk_color}; color: #000;'>"
+            f"<strong>Risk estimate (if accepted):</strong> {risk_score:.1f}% ({risk_tier} risk)"
+            f"</div>",
+            unsafe_allow_html=True,
         )
 
 
