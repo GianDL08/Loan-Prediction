@@ -287,7 +287,7 @@ def main():
 
     with tabs[4]:
         st.subheader("Model Information")
-        st.write("**Model type:** Logistic Regression")
+        st.write("**Model type:** Random Forest (ensemble of decision trees)")
         st.write("**Features used:**")
         st.write(model_report.get("features", []))
         st.write("**Evaluation metrics (test set)**")

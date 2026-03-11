@@ -788,10 +788,10 @@ print(f"X_test shape: {X_test.shape}")
 print(f"y_train shape: {y_train.shape}")
 print(f"y_test shape: {y_test.shape}")
 
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 
 # Initialize the model
-model = LogisticRegression(max_iter=1000)
+model = RandomForestClassifier(n_estimators=200, random_state=42)
 
 # Train the Model
 model.fit(X_train, y_train)
