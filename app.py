@@ -295,10 +295,10 @@ Higher importance means the model relies more heavily on that feature when makin
     ax.set_ylabel("")
     st.pyplot(fig)
 
+    st.markdown("---")
+    st.subheader("How to interpret this chart")
     st.markdown(
         """
-**How to interpret this chart**:
-
 - Taller bars indicate features that the model considers more important when making loan approval predictions.
 - Features with near-zero importance are effectively ignored by the model.
 - Remember: feature importance is model-specific and does not imply causal relationships.
