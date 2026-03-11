@@ -14,6 +14,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import joblib
+import numpy as np
 import pandas as pd
 import streamlit as st
 
@@ -56,7 +57,21 @@ def build_or_load_model() -> tuple:
 
 
 def predict_from_inputs(model, inputs: dict) -> dict:
-    """Run a prediction from a normalized input dict."""
+    """Run a prediction from a normalized input dict.
+
+    The training pipeline expects log-transformed income/loan features and a derived
+    `total_income` feature (matching `train_model.load_and_clean_data`).
+    """
+    inputs = inputs.copy()
+
+    if "applicant_income" in inputs and "coapplicant_income" in inputs:
+        inputs["total_income"] = inputs["applicant_income"] + inputs["coapplicant_income"]
+
+    # Apply the same log1p transformations used during training.
+    for col in ["applicant_income", "coapplicant_income", "total_income", "loan_amount"]:
+        if col in inputs:
+            inputs[col] = np.log1p(inputs[col])
+
     df = pd.DataFrame([inputs])
     pred_proba = model.predict_proba(df)[0]
     pred = model.predict(df)[0]
@@ -94,7 +109,6 @@ Provide the applicant profile below and click **Predict** to see the model's loa
 
         col1, col2 = st.columns(2)
         with col1:
-            gender = st.selectbox("Gender", options=["Male", "Female"], index=0)
             married = st.selectbox(
                 "Married", options=["Yes", "No"], index=0
             )
@@ -134,9 +148,7 @@ Provide the applicant profile below and click **Predict** to see the model's loa
 
     if submitted:
         inputs = {
-            "gender": gender,
-            "married": married,
-            "dependents": int(dependents),
+
             "education": education,
             "self_employed": self_employed,
             "applicant_income": applicant_income,

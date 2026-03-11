@@ -123,7 +123,6 @@ form.addEventListener('submit', async (event) => {
   const formData = new FormData(form);
 
   const payload = {
-    gender: formData.get('gender'),
     married: formData.get('married'),
     dependents: Number(formData.get('dependents')),
     education: formData.get('education'),
