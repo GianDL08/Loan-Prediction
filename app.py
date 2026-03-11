@@ -284,29 +284,19 @@ Higher correlations mean the variables move together; negative correlations mean
 
     corr = clean_df[available].corr()
 
-    # Use a mask to show only the lower triangle (avoid duplicate info)
-    mask = np.triu(np.ones_like(corr, dtype=bool))
-
     fig, ax = plt.subplots(figsize=(8, 6))
-    sns.set_style("white")
     sns.heatmap(
         corr,
-        mask=mask,
         annot=True,
         fmt=".2f",
-        cmap=sns.diverging_palette(220, 20, as_cmap=True),
+        cmap="coolwarm",
         vmin=-1,
         vmax=1,
         square=True,
-        linewidths=0.5,
-        cbar_kws={"shrink": 0.8, "label": "Pearson r"},
+        cbar_kws={"shrink": 0.8},
         ax=ax,
     )
-    ax.set_title("Correlation matrix (numeric inputs)", pad=16)
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
-    ax.set_yticklabels(ax.get_yticklabels(), rotation=0)
-    fig.tight_layout()
-
+    ax.set_title("Correlation matrix (numeric inputs)")
     st.pyplot(fig)
 
 
