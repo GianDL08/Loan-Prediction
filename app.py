@@ -126,7 +126,7 @@ Provide the applicant profile below and click **Predict** to see the model's loa
                 "Married", options=["Yes", "No"], index=0
             )
             dependents = st.selectbox(
-                "Dependents", options=["0", "1", "2", "3"], index=0
+                "Number of Dependents", options=["0", "1", "2", "3"], index=0
             )
             education = st.selectbox(
                 "Education", options=["Graduate", "Not Graduate"], index=0
@@ -142,7 +142,7 @@ Provide the applicant profile below and click **Predict** to see the model's loa
 
         with col2:
             total_income = st.number_input(
-                "Total Income", min_value=0.0, value=0.0, step=100.0
+                "Total Income (in thousands)", min_value=0.0, value=0.0, step=100.0
             )
             loan_amount = st.number_input(
                 "Loan Amount (in thousands)", min_value=0.0, value=100.0, step=10.0
