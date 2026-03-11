@@ -256,48 +256,54 @@ Provide the applicant profile below and click **Predict** to see the model's loa
             )
 
 
-def render_correlation_heatmap(clean_df: pd.DataFrame):
-    """Render a correlation heatmap of the main numeric prediction inputs."""
+def render_feature_importance(model):
+    """Render a bar chart showing feature importance from the trained model."""
 
-    st.header("Feature Correlation Heatmap")
+    st.header("Feature Importance")
     st.markdown(
         """
-Below is the correlation matrix for the numeric input features used by the prediction model.
+This chart shows how much each feature contributes to the model's decision.
 
-Higher correlations mean the variables move together; negative correlations mean they move in opposite directions.
+Higher importance means the model relies more heavily on that feature when making predictions.
 """
     )
 
-    numeric_features = [
-        "dependents",
-        "total_income",
-        "loan_amount",
-        "loan_amount_term",
-        "credit_history",
-        "debt_to_income_ratio",
-    ]
-    available = [c for c in numeric_features if c in clean_df.columns]
-
-    if not available:
-        st.warning("No numeric features available for correlation analysis.")
+    try:
+        importances = model.named_steps["classifier"].feature_importances_
+    except Exception:
+        st.warning("Unable to extract feature importances from the trained model.")
         return
 
-    corr = clean_df[available].corr()
+    # Attempt to get feature names from the preprocessing pipeline
+    feature_names = None
+    try:
+        preprocessor = model.named_steps["preprocessor"]
+        feature_names = preprocessor.get_feature_names_out()
+    except Exception:
+        feature_names = None
 
-    fig, ax = plt.subplots(figsize=(8, 6))
-    sns.heatmap(
-        corr,
-        annot=True,
-        fmt=".2f",
-        cmap="coolwarm",
-        vmin=-1,
-        vmax=1,
-        square=True,
-        cbar_kws={"shrink": 0.8},
-        ax=ax,
-    )
-    ax.set_title("Correlation matrix (numeric inputs)")
+    if feature_names is None or len(feature_names) != len(importances):
+        feature_names = [f"feature_{i}" for i in range(len(importances))]
+
+    imp_df = pd.DataFrame({"feature": feature_names, "importance": importances})
+    imp_df = imp_df.sort_values("importance", ascending=False)
+
+    fig, ax = plt.subplots(figsize=(10, max(4, len(imp_df) * 0.25)))
+    sns.barplot(data=imp_df, x="importance", y="feature", palette="viridis", ax=ax)
+    ax.set_title("Model feature importances")
+    ax.set_xlabel("Importance")
+    ax.set_ylabel("")
     st.pyplot(fig)
+
+    st.markdown(
+        """
+**How to interpret this chart**:
+
+- Taller bars indicate features that the model considers more important when making loan approval predictions.
+- Features with near-zero importance are effectively ignored by the model.
+- Remember: feature importance is model-specific and does not imply causal relationships.
+"""
+    )
 
 
 def main():
@@ -309,13 +315,13 @@ def main():
 
     st.title("Loan Prediction Explorer")
 
-    tabs = st.tabs(["Predict", "Correlations"])
+    tabs = st.tabs(["Predict", "Feature importance"])
 
     with tabs[0]:
         render_prediction_ui(model)
 
     with tabs[1]:
-        render_correlation_heatmap(clean_df)
+        render_feature_importance(model)
 
 
 if __name__ == "__main__":
