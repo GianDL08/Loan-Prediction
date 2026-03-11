@@ -230,7 +230,7 @@ Provide the applicant profile below and click **Predict** to see the model's loa
 
             # Risk bar (green -> red)
             st.markdown(
-                f"<div style='margin-top:12px; padding:12px; border-radius:12px; background: #f5f5f5;'>"
+                f"<div style='margin-top:12px; padding:12px; border-radius:12px; background: #f5f5f5; color: #0b0c0d;'>"
                 f"<div style='font-weight:600; margin-bottom:6px;'>Risk estimate (if accepted)</div>"
                 f"<div style='position: relative; height: 16px; border-radius: 10px; background: #ddd;'>"
                 f"<div style='width: {risk_score:.1f}%; height: 100%; border-radius: 10px; background: {risk_color};'></div>"
@@ -242,13 +242,13 @@ Provide the applicant profile below and click **Predict** to see the model's loa
 
         with col_details:
             st.markdown(
-                "<div style='display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;'>"
-                f"<div style='padding:12px; border-radius:12px; background:#f2f8ff;'>"
-                f"<div style='font-size:12px; color:#333; font-weight:600;'>Approval probability</div>"
+                "<div style='display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; color: #0b0c0d;'>"
+                f"<div style='padding:12px; border-radius:12px; background:#f2f8ff; color: #0b0c0d;'>"
+                f"<div style='font-size:12px; color:#0b0c0d; font-weight:600;'>Approval probability</div>"
                 f"<div style='font-size:20px; font-weight:700; margin-top:6px;'>{approve_pct:.1f}%</div>"
                 f"</div>"
-                f"<div style='padding:12px; border-radius:12px; background:#fff1f1;'>"
-                f"<div style='font-size:12px; color:#333; font-weight:600;'>Rejection probability</div>"
+                f"<div style='padding:12px; border-radius:12px; background:#fff1f1; color: #0b0c0d;'>"
+                f"<div style='font-size:12px; color:#0b0c0d; font-weight:600;'>Rejection probability</div>"
                 f"<div style='font-size:20px; font-weight:700; margin-top:6px;'>{reject_pct:.1f}%</div>"
                 f"</div>"
                 f"</div>",
