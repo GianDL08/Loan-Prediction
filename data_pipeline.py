@@ -67,6 +67,17 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
         if col in df.columns:
             df.loc[:, col] = df[col].fillna(df[col].median())
 
+    # Derived features for convenience / analysis
+    if "applicant_income" in df.columns and "coapplicant_income" in df.columns:
+        df["total_income"] = df["applicant_income"] + df["coapplicant_income"]
+
+    if "total_income" in df.columns and "loan_amount" in df.columns:
+        df["debt_to_income_ratio"] = np.where(
+            df["total_income"] > 0,
+            (df["loan_amount"] * 1000) / df["total_income"],
+            0,
+        )
+
     if "credit_history" in df.columns:
         df["credit_history"] = df["credit_history"].astype("Int64")
 
@@ -130,6 +141,8 @@ def summarize_for_ui(df: pd.DataFrame) -> Dict[str, Any]:
     numeric_cols = [
         "applicant_income",
         "coapplicant_income",
+        "total_income",
+        "debt_to_income_ratio",
         "loan_amount",
         "loan_amount_term",
         "dependents",
@@ -151,6 +164,7 @@ def get_preprocessing_steps() -> List[str]:
         "Normalize column names: strip whitespace, lowercase, replace spaces/hyphens with underscores.",
         "Standardize 'Dependents' by converting '3+' to '3' and casting to numeric.",
         "Impute missing values: use mode for categorical features, median for numeric features.",
+        "Compute derived features: total_income and debt_to_income_ratio.",
         "Convert appropriate columns to numeric types (ApplicantIncome, LoanAmount, Credit_History, etc.).",
         "Drop irrelevant columns (Loan_ID) before modeling.",
         "Prepare features and target for model training (Loan_Status mapped to 0/1).",

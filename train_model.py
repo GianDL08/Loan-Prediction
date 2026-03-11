@@ -47,8 +47,8 @@ def load_and_clean_data(path: str) -> pd.DataFrame:
             df.loc[:, col] = df[col].fillna(df[col].mode()[0])
 
     if "dependents" in df.columns:
-        df.loc[:, "dependents"] = pd.to_numeric(df["dependents"], errors="coerce")
-        df.loc[:, "dependents"] = df["dependents"].fillna(df["dependents"].median())
+        df["dependents"] = pd.to_numeric(df["dependents"], errors="coerce")
+        df["dependents"] = df["dependents"].fillna(df["dependents"].median())
 
     # Ensure we don't have missing income values
     for col in ["applicant_income", "coapplicant_income"]:
@@ -64,7 +64,22 @@ def load_and_clean_data(path: str) -> pd.DataFrame:
     if "applicant_income" in df.columns and "coapplicant_income" in df.columns:
         df["total_income"] = df["applicant_income"] + df["coapplicant_income"]
 
-    for col in ["applicant_income", "coapplicant_income", "total_income", "loan_amount"]:
+    # New feature: debt-to-income ratio right before we drop individual income columns.
+    # Note: loan_amount is stored in thousands, so convert to unit values for ratio.
+    if "total_income" in df.columns and "loan_amount" in df.columns:
+        df["debt_to_income_ratio"] = np.where(
+            df["total_income"] > 0,
+            (df["loan_amount"] * 1000) / df["total_income"],
+            0,
+        )
+
+    # The model only uses total income (not applicant/coapplicant separately).
+    for col in ["applicant_income", "coapplicant_income"]:
+        if col in df.columns:
+            df = df.drop(columns=[col])
+
+    # Apply log transforms to the numeric features used by the model.
+    for col in ["total_income", "loan_amount", "debt_to_income_ratio"]:
         if col in df.columns:
             df.loc[:, col] = np.log1p(df[col])
 
@@ -83,12 +98,11 @@ def load_and_clean_data(path: str) -> pd.DataFrame:
 def build_pipeline() -> Pipeline:
     numeric_features = [
         "dependents",
-        "applicant_income",
-        "coapplicant_income",
         "total_income",
         "loan_amount",
         "loan_amount_term",
         "credit_history",
+        "debt_to_income_ratio",
     ]
 
     categorical_features = [

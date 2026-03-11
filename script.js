@@ -70,7 +70,7 @@ function getPrediction(data) {
   if (data.credit_history === 0) score.push(-2);
 
   // Higher income + lower loan amount increases approval chance.
-  const income = data.applicantIncome + data.coapplicantIncome;
+  const income = data.totalIncome;
   const loan = data.loanAmount * 1000; // convert to units
   const dti = income > 0 ? loan / income : 100;
 
@@ -90,7 +90,7 @@ function getPrediction(data) {
 
   const messageLines = [];
   messageLines.push(`Credit history: ${data.credit_history === 1 ? 'Good' : 'Poor'}`);
-  messageLines.push(`Income (applicant + coapplicant): $${formatCurrency(income)}`);
+  messageLines.push(`Total income: $${formatCurrency(income)}`);
   messageLines.push(`Loan amount: $${formatCurrency(loan)}`);
   messageLines.push(`Estimated debt-to-income: ${dti.toFixed(1)}`);
 
@@ -127,8 +127,7 @@ form.addEventListener('submit', async (event) => {
     dependents: Number(formData.get('dependents')),
     education: formData.get('education'),
     selfEmployed: formData.get('selfEmployed'),
-    applicantIncome: parseNumber(formData.get('applicantIncome')),
-    coapplicantIncome: parseNumber(formData.get('coapplicantIncome')),
+    totalIncome: parseNumber(formData.get('totalIncome')),
     loanAmount: parseNumber(formData.get('loanAmount')),
     loanTerm: parseNumber(formData.get('loanTerm')),
     credit_history: Number(formData.get('creditHistory')),

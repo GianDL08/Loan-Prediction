@@ -66,18 +66,22 @@ def predict_from_inputs(model, inputs: dict) -> dict:
 
     # Ensure numeric inputs are floats so downstream preprocessing behaves consistently.
     # (JSON may deserialize whole numbers as int; sklearn pipelines expect floats.)
-    for col in ["applicant_income", "coapplicant_income", "loan_amount", "loan_amount_term"]:
+    for col in ["total_income", "loan_amount", "loan_amount_term"]:
         if col in inputs:
             try:
                 inputs[col] = float(inputs[col])
             except (TypeError, ValueError):
                 pass
 
-    if "applicant_income" in inputs and "coapplicant_income" in inputs:
-        inputs["total_income"] = inputs["applicant_income"] + inputs["coapplicant_income"]
+    # Create derived features to match training pipeline
+    if "total_income" in inputs and "loan_amount" in inputs:
+        # loan_amount is in thousands in the dataset.
+        income = inputs.get("total_income", 0.0)
+        loan = inputs.get("loan_amount", 0.0)
+        inputs["debt_to_income_ratio"] = (loan * 1000) / income if income > 0 else 0.0
 
     # Apply the same log1p transformations used during training.
-    for col in ["applicant_income", "coapplicant_income", "total_income", "loan_amount"]:
+    for col in ["total_income", "loan_amount", "debt_to_income_ratio"]:
         if col in inputs:
             inputs[col] = np.log1p(inputs[col])
 
@@ -137,17 +141,14 @@ Provide the applicant profile below and click **Predict** to see the model's loa
             )
 
         with col2:
-            applicant_income = st.number_input(
-                "Applicant Income", min_value=0.0, value=0.0, step=100.0
-            )
-            coapplicant_income = st.number_input(
-                "Coapplicant Income", min_value=0.0, value=0.0, step=100.0
+            total_income = st.number_input(
+                "Total Income", min_value=0.0, value=0.0, step=100.0
             )
             loan_amount = st.number_input(
                 "Loan Amount (in thousands)", min_value=0.0, value=100.0, step=10.0
             )
             loan_term = st.number_input(
-                "Loan Amount Term (in days)", min_value=0.0, value=360.0, step=12.0
+                "Loan Amount Term (in months)", min_value=0.0, value=360.0, step=12.0
             )
             credit_history = st.selectbox(
                 "Credit History", options=[0, 1], index=1
@@ -162,8 +163,7 @@ Provide the applicant profile below and click **Predict** to see the model's loa
             "dependents": int(dependents),
             "education": education,
             "self_employed": self_employed,
-            "applicant_income": applicant_income,
-            "coapplicant_income": coapplicant_income,
+            "total_income": total_income,
             "loan_amount": loan_amount,
             "loan_amount_term": int(loan_term),
             "credit_history": credit_history,
