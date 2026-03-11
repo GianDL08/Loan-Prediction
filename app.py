@@ -14,8 +14,10 @@ from __future__ import annotations
 from pathlib import Path
 
 import joblib
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import streamlit as st
 
 import train_model
@@ -254,6 +256,50 @@ Provide the applicant profile below and click **Predict** to see the model's loa
             )
 
 
+def render_correlation_heatmap(clean_df: pd.DataFrame):
+    """Render a correlation heatmap of the main numeric prediction inputs."""
+
+    st.header("Feature Correlation Heatmap")
+    st.markdown(
+        """
+Below is the correlation matrix for the numeric input features used by the prediction model.
+
+Higher correlations mean the variables move together; negative correlations mean they move in opposite directions.
+"""
+    )
+
+    numeric_features = [
+        "dependents",
+        "total_income",
+        "loan_amount",
+        "loan_amount_term",
+        "credit_history",
+        "debt_to_income_ratio",
+    ]
+    available = [c for c in numeric_features if c in clean_df.columns]
+
+    if not available:
+        st.warning("No numeric features available for correlation analysis.")
+        return
+
+    corr = clean_df[available].corr()
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    sns.heatmap(
+        corr,
+        annot=True,
+        fmt=".2f",
+        cmap="coolwarm",
+        vmin=-1,
+        vmax=1,
+        square=True,
+        cbar_kws={"shrink": 0.8},
+        ax=ax,
+    )
+    ax.set_title("Correlation matrix (numeric inputs)")
+    st.pyplot(fig)
+
+
 def main():
     st.set_page_config(page_title="Loan Prediction", layout="wide")
 
@@ -263,7 +309,13 @@ def main():
 
     st.title("Loan Prediction Explorer")
 
-    render_prediction_ui(model)
+    tabs = st.tabs(["Predict", "Correlations"])
+
+    with tabs[0]:
+        render_prediction_ui(model)
+
+    with tabs[1]:
+        render_correlation_heatmap(clean_df)
 
 
 if __name__ == "__main__":
