@@ -263,35 +263,7 @@ def main():
 
     st.title("Loan Prediction Explorer")
 
-    tabs = st.tabs(["Predict", "Data Summary", "EDA", "Preprocessing", "Model"])
-
-    with tabs[0]:
-        render_prediction_ui(model)
-
-    with tabs[1]:
-        st.subheader("Dataset Summary")
-        st.write(summarize_for_ui(clean_df))
-
-    with tabs[2]:
-        st.subheader("Exploratory Data Analysis (Sample)")
-        st.write("### Cleaned Data Head")
-        st.dataframe(get_head(clean_df, n=10))
-        st.write("### Raw Data Head")
-        st.dataframe(get_head(raw_df, n=10))
-
-    with tabs[3]:
-        st.subheader("Preprocessing Steps")
-        steps = get_preprocessing_steps()
-        for step in steps:
-            st.write(f"- {step}")
-
-    with tabs[4]:
-        st.subheader("Model Information")
-        st.write("**Model type:** Random Forest (ensemble of decision trees)")
-        st.write("**Features used:**")
-        st.write(model_report.get("features", []))
-        st.write("**Evaluation metrics (test set)**")
-        st.json(model_report.get("report", {}))
+    render_prediction_ui(model)
 
 
 if __name__ == "__main__":
