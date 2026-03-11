@@ -14,6 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import sklearn as sk
+import streamlit as st
 
 df = pd.read_csv('Loan_Prediction_Dataset.csv')
 
@@ -86,16 +87,6 @@ df
 
 """#**Exploratory Data Analysis**
 
-##Predict Loan Eligibility for Dream Housing Finance company
-
-Dream Housing Finance Company deals with all kinds of home loans and has a presence across urban, semi-urban, and rural areas. When a customer applies for a home loan, the company first evaluates their eligibility before making a decision. Traditionally, this process could take time and depended heavily on manual review.
-
-The lending industry is a cornerstone of the modern global economy. Financial institutions such as banks and credit unions rely on the interest generated from loans as a major source of revenue. However, lending always involves risk, especially the risk that a borrower may fail to repay the loan. To reduce this risk, institutions carefully assess the creditworthiness of applicants by examining factors such as income, credit history, employment status, and other relevant details.
-
-To improve efficiency and accuracy, Dream Housing Finance Company aims to automate its loan eligibility process in real time. Customers provide information while filling out an online application form, including Gender, Marital Status, Education, Number of Dependents, Income, Loan Amount, Credit History, and other details. Using a dataset of past applications, the company plans to apply machine learning techniques to identify patterns and segment customers who are most likely to be eligible for a loan.
-
-By analyzing historical data, predictive models can estimate the probability of loan approval or default more objectively and quickly than manual evaluation. This transformation not only speeds up the approval process but also minimizes potential losses, optimizes the company’s loan portfolio, and allows the institution to extend credit to a wider range of reliable customers while managing risk effectively.
-
 ##Overview
 
 * `Loan_ID` is the unique id of the row and it doesn't have any effect on the target
@@ -117,10 +108,17 @@ By analyzing historical data, predictive models can estimate the probability of 
 
 df.head()
 
+#Shape of the dataset
+df.shape
+#rows, columns
+
+#Datatypes of each variable
 df.info()
 
+#Summary Statistics
 df.describe()
 
+#check for missing values
 df.isnull().sum()
 
 """##Univariate Analysis
@@ -142,7 +140,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the gender distribution within a specific dataset. It was generated using Python’s Seaborn and Matplotlib libraries to provide a clear visual count of the "Male" and "Female" categories.
 
@@ -170,7 +168,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the distribution of marital status within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries to provide a clear visual count of the "No" and "Yes" categories.
 
@@ -198,7 +196,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the Distribution of Dependents within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries, utilizing a "viridis" color palette and data annotations to display exact counts for each category.
 
@@ -230,7 +228,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the Distribution of Education within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries to provide a visual breakdown of educational attainment levels.
 
@@ -258,7 +256,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the Distribution of Self-Employed status within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries to provide a visual count of the "No" and "Yes" categories.
 
@@ -287,7 +285,7 @@ for p in ax.patches:
                     ha='center', va='center', fontsize=9, color='black', xytext=(0, 5),
                     textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This histogram illustrates the Distribution of Applicant Income within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries, featuring a Kernel Density Estimate (KDE) line to show the shape of the data distribution.
 
@@ -318,7 +316,7 @@ for p in ax.patches:
                     ha='center', va='center', fontsize=9, color='black', xytext=(0, 5),
                     textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This histogram illustrates the Distribution of Coapplicant Income within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries, including a Kernel Density Estimate (KDE) line to visualize the probability density of the income levels.
 
@@ -349,7 +347,7 @@ for p in ax.patches:
                     ha='center', va='center', fontsize=9, color='black', xytext=(0, 5),
                     textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This histogram illustrates the Distribution of Loan Amount within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries, including a Kernel Density Estimate (KDE) line to represent the probability density of the requested loan sizes.
 
@@ -379,7 +377,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the Distribution of Loan Amount Term (in months) within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries with the "viridis" palette and exact data labels.
 
@@ -409,7 +407,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the Distribution of Credit History within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries to provide a visual count of applicants who meet credit guidelines versus those who do not.
 
@@ -437,7 +435,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the Distribution of Property Area within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries, using the "viridis" palette to categorize and count the different types of residential locations.
 
@@ -467,7 +465,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """This bar chart illustrates the Distribution of Loan Status within the dataset. It was generated using Python’s Seaborn and Matplotlib libraries to visualize the final outcome of loan applications.
 
@@ -497,7 +495,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Married and Loan Statsus"""
 
@@ -512,7 +510,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Dependents and Loan Status"""
 
@@ -527,7 +525,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Education vs Loan Status"""
 
@@ -542,7 +540,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Applicant Income and Loan Status"""
 
@@ -552,7 +550,7 @@ ax.set_xticklabels(['Approved', 'Not Approved'])
 plt.title('Loan Status by Applicant Income')
 plt.xlabel('Loan Status')
 plt.ylabel('Applicant Income')
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Self Employed and Loan Status"""
 
@@ -576,7 +574,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Coapplicant Income and Loan Status"""
 
@@ -585,7 +583,7 @@ ax = sns.boxplot(data=df, x='loan_status', y='coapplicant_income', palette='viri
 plt.title('Loan Status by Coapplicant Income')
 plt.xlabel('Loan Status')
 plt.ylabel('Coapplicant Income')
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Loan Amount and Loan Status"""
 
@@ -594,7 +592,7 @@ ax = sns.boxplot(data=df, x='loan_status', y='loan_amount', palette='viridis')
 plt.title('Loan Status by Loan Amount')
 plt.xlabel('Loan Status')
 plt.ylabel('Loan Amount')
-plt.show()
+st.pyplot(plt.gcf())
 
 """###Credit History and Loan Status"""
 
@@ -609,7 +607,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """### Property Area and Loan Status"""
 
@@ -624,7 +622,7 @@ for p in ax.patches:
                 ha='center', va='center', fontsize=10, color='black', xytext=(0, 5),
                 textcoords='offset points')
 
-plt.show()
+st.pyplot(plt.gcf())
 
 """##Multivariate Analysis
 
@@ -657,7 +655,7 @@ sns.heatmap(
     linewidths=.5
 )
 plt.title('Correlation Heatmap of Financial Variables and Loan Status')
-plt.show()
+st.pyplot(plt.gcf())
 
 """#**Data Preprocessing**
 
@@ -680,7 +678,7 @@ df['coapplicant_income'] = np.log1p(df['coapplicant_income'])
 df['total_income'] = np.log1p(df['total_income'])
 df['loan_amount'] = np.log1p(df['loan_amount'])
 
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import RobustScaler
 
 #Standardizes the scale to ensure data is in the best possible shape for machine learning
 
@@ -694,8 +692,8 @@ numerical_cols = [
     'credit_history'
 ]
 
-# Instantiate StandardScaler
-scaler = StandardScaler()
+# Instantiate RobustScaler
+scaler = RobustScaler()
 
 # Apply scaling to the numerical columns
 df[numerical_cols] = scaler.fit_transform(df[numerical_cols])
@@ -705,7 +703,7 @@ df[numerical_cols] = scaler.fit_transform(df[numerical_cols])
 3. **One-Hot Encoding Categorical Data**: Converts text-based categories (like 'Male', 'Female' or 'Urban', 'Rural') into numerical formats that machine learning algorithms can understand and process.
 4. **Creating total_income**: This new feature directly provides the model with a more complete picture of an applicant's financial capacity.
 5. **Logarithmic Transformation** (for skewed features like income and loan amount): Makes the data distribution more 'balanced' and less influenced by a few extremely high values. This helps models see patterns more clearly across all income levels.
-6. **StandardScaler** (for numerical features): Puts all your numerical features on a similar scale. This is vital because many machine learning algorithms perform much better when all input numbers are in a comparable range, preventing features with naturally larger numbers from unfairly dominating the learning process.
+6. **RobustScaler** (for numerical features): Puts all your numerical features on a similar scale. This is vital because many machine learning algorithms perform much better when all input numbers are in a comparable range, preventing features with naturally larger numbers from unfairly dominating the learning process.
 
 ###Dropping Unecessary Columns for Analysis
 """
@@ -720,7 +718,7 @@ df = df.drop(columns=['loan_status'])
 """###Data Imputation"""
 
 #NaN (problematic) values that occured due to logarithmic transformation
-display(df.isnull().sum())
+# display(df.isnull().sum())
 
 # Identify columns with NaN values
 nan_cols = df.columns[df.isnull().any()].tolist()
@@ -730,7 +728,7 @@ for col in nan_cols:
     median_val = df[col].median()
     df[col].fillna(median_val, inplace=True)
 
-display(df.isnull().sum())
+# display(df.isnull().sum())
 
 df
 
@@ -780,7 +778,22 @@ y_pred
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 accuracy_score(y_pred,y_test)
 
+#Model Evaluation: Confusion Matrix
+#21 (True Negatives): Correctly predicted rejections.
+#84 (True Positives): Correctly predicted approvals.
+#17 (False Positives): Incorrectly predicted approval (Risk for the bank).
+#1 (False Negative): Incorrectly predicted rejection.
 confusion_matrix(y_test,y_pred)
 
 print (classification_report(y_test,y_pred))
+
+"""Classification Report Analysis
+This report measures the accuracy, precision, and recall of our model.
+
+**Accuracy** (0.85): The model is correct 85% of the time.
+
+**Precision** (Class 0): When the model predicts a rejection, it is 95% accurate.
+
+**Recall** (Class 1): The model successfully identifies 99% of all eligible loan applicants.
+"""
 
