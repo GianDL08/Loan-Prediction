@@ -4,6 +4,35 @@ const form = document.getElementById('predictForm');
 const resetBtn = document.getElementById('resetBtn');
 const resultEl = document.getElementById('predictionResult');
 
+function renderTable(records) {
+  if (!Array.isArray(records) || records.length === 0) {
+    return '<p>No data available.</p>';
+  }
+
+  const keys = Object.keys(records[0]);
+  const header = keys.map((k) => `<th>${k}</th>`).join('');
+  const rows = records
+    .map(
+      (row) =>
+        `<tr>${keys.map((k) => `<td>${row[k] ?? ''}</td>`).join('')}</tr>`
+    )
+    .join('');
+
+  return `<div class="table-wrap"><table><thead><tr>${header}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function renderKeyValueList(obj) {
+  if (!obj || typeof obj !== 'object') return '<p>None</p>';
+
+  return (
+    '<ul>' +
+    Object.entries(obj)
+      .map(([k, v]) => `<li><strong>${k}</strong>: ${JSON.stringify(v)}</li>`)
+      .join('') +
+    '</ul>'
+  );
+}
+
 function setActiveTab(targetId) {
   tabs.forEach((tab) => {
     tab.classList.toggle('active', tab.dataset.target === targetId);
@@ -15,6 +44,12 @@ function setActiveTab(targetId) {
 
   // Ensure page scrolls to top when switching sections
   window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Load tab-specific data lazily
+  if (targetId === 'data-cleaning') loadCleaningSummary();
+  if (targetId === 'eda') loadEDASummary();
+  if (targetId === 'preprocessing') loadPreprocessingSummary();
+  if (targetId === 'modeling') loadModelSummary();
 }
 
 tabs.forEach((tab) => {
@@ -139,14 +174,11 @@ resetBtn.addEventListener('click', () => {
   resultEl.classList.remove('approved', 'rejected');
 });
 
-async function loadSummary() {
-  const cleaningEl = document.getElementById('cleaningSummary');
-  const edaEl = document.getElementById('edaSummary');
+async function loadCleaningSummary() {
+  const el = document.getElementById('cleaningSummary');
+  if (!el) return;
 
-  if (!cleaningEl || !edaEl) return;
-
-  cleaningEl.innerHTML = '<em>Loading data summary...</em>';
-  edaEl.innerHTML = '<em>Loading data summary...</em>';
+  el.innerHTML = '<em>Loading data summary...</em>';
 
   try {
     const response = await fetch('/api/summary');
@@ -158,38 +190,102 @@ async function loadSummary() {
       .map(([k, v]) => `<li><strong>${k}</strong>: ${v}</li>`)
       .join('');
 
-    cleaningEl.innerHTML = `
+    el.innerHTML = `
       <h3>Cleaning summary</h3>
       <p><strong>Rows</strong>: ${summary.shape[0]}, <strong>Columns</strong>: ${summary.shape[1]}</p>
       <p><strong>Duplicate rows</strong>: ${summary.duplicate_count}</p>
       <h4>Missing values</h4>
       <ul>${missing}</ul>
     `;
+  } catch (error) {
+    el.innerHTML = '<p class="error">Failed to load summary.</p>';
+  }
+}
 
-    const categorical = summary.categorical_counts || {};
+async function loadEDASummary() {
+  const el = document.getElementById('edaSummary');
+  if (!el) return;
+
+  el.innerHTML = '<em>Loading EDA data...</em>';
+
+  try {
+    const response = await fetch('/api/eda');
+    if (!response.ok) throw new Error('Failed to load EDA data');
+
+    const data = await response.json();
+
+    const categorical = data.summary.categorical_counts || {};
+
     const showCounts = (obj) =>
       Object.entries(obj)
         .map(
           ([k, vals]) =>
-            `<li><strong>${k}</strong>: ${Object.entries(vals)
-              .map(([v, c]) => `${v} (${c})`)
-              .join(', ')}</li>`
+            `<div class="section"><h4>${k}</h4>${renderKeyValueList(vals)}</div>`
         )
         .join('');
 
-    edaEl.innerHTML = `
-      <h3>Quick EDA</h3>
-      <p><strong>Numeric feature summary</strong></p>
-      <pre>${JSON.stringify(summary.numeric_stats, null, 2)}</pre>
-      <p><strong>Categorical counts (sample)</strong></p>
-      <ul>${showCounts(categorical)}</ul>
+    el.innerHTML = `
+      <h3>Dataset preview (cleaned)</h3>
+      ${renderTable(data.head)}
+      <h3>Numeric summary</h3>
+      <pre>${JSON.stringify(data.summary.numeric_stats, null, 2)}</pre>
+      <h3>Categorical distribution (sample)</h3>
+      ${showCounts(categorical)}
     `;
   } catch (error) {
-    cleaningEl.innerHTML = '<p class="error">Failed to load summary.</p>';
-    edaEl.innerHTML = '<p class="error">Failed to load summary.</p>';
+    el.innerHTML = '<p class="error">Failed to load EDA data.</p>';
+  }
+}
+
+async function loadPreprocessingSummary() {
+  const el = document.getElementById('preprocessingSummary');
+  if (!el) return;
+
+  el.innerHTML = '<em>Loading preprocessing details...</em>';
+
+  try {
+    const response = await fetch('/api/preprocessing');
+    if (!response.ok) throw new Error('Failed to load preprocessing details');
+
+    const data = await response.json();
+
+    el.innerHTML = `
+      <h3>Preprocessing steps</h3>
+      <ul>${data.steps.map((s) => `<li>${s}</li>`).join('')}</ul>
+      <h3>Raw data sample</h3>
+      ${renderTable(data.raw_head)}
+      <h3>Cleaned data sample</h3>
+      ${renderTable(data.clean_head)}
+    `;
+  } catch (error) {
+    el.innerHTML = '<p class="error">Failed to load preprocessing details.</p>';
+  }
+}
+
+async function loadModelSummary() {
+  const el = document.getElementById('modelingSummary');
+  if (!el) return;
+
+  el.innerHTML = '<em>Loading model metrics...</em>';
+
+  try {
+    const response = await fetch('/api/model');
+    if (!response.ok) throw new Error('Failed to load model metrics');
+
+    const data = await response.json();
+
+    el.innerHTML = `
+      <h3>${data.model_type}</h3>
+      <p>The model is trained on cleaned and preprocessed data and evaluated using a holdout test set.</p>
+      <h4>Evaluation metrics</h4>
+      <pre>${JSON.stringify(data.metrics, null, 2)}</pre>
+      <h4>Model features</h4>
+      <pre>${JSON.stringify(data.features, null, 2)}</pre>
+    `;
+  } catch (error) {
+    el.innerHTML = '<p class="error">Failed to load model metrics.</p>';
   }
 }
 
 // Initialize page state
 setActiveTab('home');
-loadSummary();

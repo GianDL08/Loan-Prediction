@@ -43,16 +43,16 @@ def load_and_clean_data(path: str) -> pd.DataFrame:
     ]
     for col in fill_modes:
         if col in df.columns:
-            df[col].fillna(df[col].mode()[0], inplace=True)
+            df.loc[:, col] = df[col].fillna(df[col].mode()[0])
 
     if "dependents" in df.columns:
-        df["dependents"] = pd.to_numeric(df["dependents"], errors="coerce")
-        df["dependents"].fillna(df["dependents"].median(), inplace=True)
+        df.loc[:, "dependents"] = pd.to_numeric(df["dependents"], errors="coerce")
+        df.loc[:, "dependents"] = df["dependents"].fillna(df["dependents"].median())
 
     num_median_cols = ["loan_amount", "loan_amount_term"]
     for col in num_median_cols:
         if col in df.columns:
-            df[col].fillna(df[col].median(), inplace=True)
+            df.loc[:, col] = df[col].fillna(df[col].median())
 
     # Force types
     if "credit_history" in df.columns:
@@ -114,7 +114,7 @@ def build_pipeline() -> Pipeline:
     return pipeline
 
 
-def train_and_save(data_path: str, model_path: str):
+def train_and_save(data_path: str, model_path: str, return_report: bool = False):
     df = load_and_clean_data(data_path)
 
     # Map target
@@ -133,11 +133,21 @@ def train_and_save(data_path: str, model_path: str):
     pipeline.fit(X_train, y_train)
 
     predictions = pipeline.predict(X_test)
+
+    report = classification_report(y_test, predictions, output_dict=True)
+
     print("Test set classification report:\n")
     print(classification_report(y_test, predictions))
 
     joblib.dump(pipeline, model_path)
     print(f"Saved trained pipeline to {model_path}")
+
+    if return_report:
+        return {
+            "report": report,
+            "classes": list(pipeline.classes_),
+            "features": list(X.columns),
+        }
 
 
 if __name__ == "__main__":

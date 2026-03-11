@@ -298,6 +298,31 @@ button#resetBtn:hover {
   margin: 0;
 }
 
+.table-wrap {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(226, 232, 240, 0.12);
+  margin-top: 12px;
+}
+
+.table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table-wrap th,
+.table-wrap td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.12);
+}
+
+.table-wrap th {
+  text-align: left;
+  font-weight: 700;
+  background: rgba(226, 232, 240, 0.06);
+}
+
 .api-output .error {
   color: #ffb3b3;
 }

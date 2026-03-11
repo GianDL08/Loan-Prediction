@@ -4,7 +4,8 @@ from pathlib import Path
 from flask import Flask, request, jsonify, send_from_directory
 import joblib
 
-from data_pipeline import clean_data, load_raw_data, summarize_for_ui
+import train_model
+from data_pipeline import clean_data, load_raw_data, summarize_for_ui, get_head, get_preprocessing_steps
 
 
 MODEL_FILE = Path(__file__).parent / "model.joblib"
@@ -15,18 +16,23 @@ app = Flask(
 )
 
 
-def load_model():
+def build_or_load_model() -> tuple:
+    """Ensure a trained model exists and return (model, report)."""
     if not MODEL_FILE.exists():
-        raise FileNotFoundError(
-            "Model checkpoint not found. Run `python train_model.py` to create model.joblib.`"
-        )
-    return joblib.load(MODEL_FILE)
+        report = train_model.train_and_save(str(DATA_FILE), str(MODEL_FILE), return_report=True)
+        model = joblib.load(MODEL_FILE)
+        return model, report
+
+    model = joblib.load(MODEL_FILE)
+    # Recompute report to keep it consistent with data
+    report = train_model.train_and_save(str(DATA_FILE), str(MODEL_FILE), return_report=True)
+    return model, report
 
 
 # Load resources once at startup
-model = load_model()
 raw_df = load_raw_data(DATA_FILE)
 clean_df = clean_data(raw_df)
+model, model_report = build_or_load_model()
 
 
 @app.route("/predict", methods=["POST"])
@@ -96,6 +102,42 @@ def predict():
 def summary():
     """Return data cleaning / EDA summary information."""
     return jsonify(summarize_for_ui(clean_df))
+
+
+@app.route("/api/eda", methods=["GET"])
+def eda():
+    """Return EDA tables and data for UI rendering."""
+    return jsonify(
+        {
+            "head": get_head(clean_df, n=10),
+            "summary": summarize_for_ui(clean_df),
+        }
+    )
+
+
+@app.route("/api/preprocessing", methods=["GET"])
+def preprocessing():
+    """Return preprocessing steps and sample of cleaned data."""
+    return jsonify(
+        {
+            "steps": get_preprocessing_steps(),
+            "raw_head": get_head(raw_df, n=5),
+            "clean_head": get_head(clean_df, n=5),
+        }
+    )
+
+
+@app.route("/api/model", methods=["GET"])
+def model_info():
+    """Return model details and evaluation metrics."""
+    return jsonify(
+        {
+            "model_type": "Logistic Regression",
+            "metrics": model_report.get("report", {}),
+            "classes": model_report.get("classes", []),
+            "features": model_report.get("features", []),
+        }
+    )
 
 
 @app.route("/", methods=["GET"])

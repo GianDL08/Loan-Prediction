@@ -51,15 +51,15 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     # Impute common columns with mode/median
     for col in ["gender", "married", "self_employed", "credit_history"]:
         if col in df.columns:
-            df[col].fillna(df[col].mode()[0], inplace=True)
+            df.loc[:, col] = df[col].fillna(df[col].mode()[0])
 
     if "dependents" in df.columns:
-        df["dependents"] = pd.to_numeric(df["dependents"], errors="coerce")
-        df["dependents"].fillna(df["dependents"].median(), inplace=True)
+        df.loc[:, "dependents"] = pd.to_numeric(df["dependents"], errors="coerce")
+        df.loc[:, "dependents"] = df["dependents"].fillna(df["dependents"].median())
 
     for col in ["loan_amount", "loan_amount_term"]:
         if col in df.columns:
-            df[col].fillna(df[col].median(), inplace=True)
+            df.loc[:, col] = df[col].fillna(df[col].median())
 
     if "credit_history" in df.columns:
         df["credit_history"] = df["credit_history"].astype("Int64")
@@ -132,3 +132,20 @@ def summarize_for_ui(df: pd.DataFrame) -> Dict[str, Any]:
     summary["numeric_stats"] = get_numeric_stats(df, [c for c in numeric_cols if c in df.columns])
 
     return summary
+
+
+def get_head(df: pd.DataFrame, n: int = 10) -> List[Dict[str, Any]]:
+    """Return the first n rows as JSON-friendly dicts."""
+    return df.head(n).to_dict(orient="records")
+
+
+def get_preprocessing_steps() -> List[str]:
+    """Return a description of the preprocessing steps applied to the dataset."""
+    return [
+        "Normalize column names: strip whitespace, lowercase, replace spaces/hyphens with underscores.",
+        "Standardize 'Dependents' by converting '3+' to '3' and casting to numeric.",
+        "Impute missing values: use mode for categorical features, median for numeric features.",
+        "Convert appropriate columns to numeric types (ApplicantIncome, LoanAmount, Credit_History, etc.).",
+        "Drop irrelevant columns (Loan_ID) before modeling.",
+        "Prepare features and target for model training (Loan_Status mapped to 0/1).",
+    ]
