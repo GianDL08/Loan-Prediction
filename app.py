@@ -148,7 +148,8 @@ Provide the applicant profile below and click **Predict** to see the model's loa
 
     if submitted:
         inputs = {
-
+            "married": married,
+            "dependents": int(dependents),
             "education": education,
             "self_employed": self_employed,
             "applicant_income": applicant_income,
