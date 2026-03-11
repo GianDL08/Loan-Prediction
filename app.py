@@ -317,6 +317,68 @@ Keep in mind that the importance values are specific to this model and dataset; 
     )
 
 
+def render_correlation_heatmap(clean_df: pd.DataFrame):
+    """Render a correlation heatmap showing relationships between numeric inputs."""
+
+    st.header("Feature Correlations")
+    st.markdown(
+        """
+This heatmap shows linear correlations (Pearson r) between the numeric features used by the model.
+
+A value close to +1 indicates a strong positive relationship; a value close to -1 indicates a strong negative relationship.
+"""
+    )
+
+    numeric_features = [
+        "dependents",
+        "total_income",
+        "loan_amount",
+        "loan_amount_term",
+        "credit_history",
+        "debt_to_income_ratio",
+    ]
+    available = [c for c in numeric_features if c in clean_df.columns]
+
+    if not available:
+        st.warning("No numeric features available for correlation analysis.")
+        return
+
+    corr = clean_df[available].corr()
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    sns.heatmap(
+        corr,
+        annot=True,
+        fmt=".2f",
+        cmap="coolwarm",
+        vmin=-1,
+        vmax=1,
+        square=True,
+        cbar_kws={"shrink": 0.8},
+        ax=ax,
+    )
+    ax.set_title("Correlation matrix (numeric inputs)")
+    st.pyplot(fig)
+
+    st.markdown("---")
+    st.subheader("How to interpret these correlations")
+    st.markdown(
+        """
+- Strong positive values (close to +1) mean the two features tend to increase together.
+- Strong negative values (close to -1) mean the features move in opposite directions.
+- Values near 0 indicate little to no linear relationship.
+
+Some specific points to watch for:
+
+- A strong positive correlation between **total_income** and **loan_amount** may indicate that higher earners request larger loans.
+- A strong positive correlation between **total_income** and **debt_to_income_ratio** (if present) can mean that higher incomes are accompanied by higher debt obligations, which could affect approval.
+- A strong negative correlation between **credit_history** and **loan_amount** could indicate that applicants with stronger credit tend to take smaller loans (or vice versa).
+
+These correlations do not imply causation, but they help you understand which features tend to move together in the dataset.
+"""
+    )
+
+
 def main():
     st.set_page_config(page_title="Loan Prediction", layout="wide")
 
@@ -326,13 +388,16 @@ def main():
 
     st.title("Loan Prediction Explorer")
 
-    tabs = st.tabs(["Predict", "Feature importance"])
+    tabs = st.tabs(["Predict", "Feature importance", "Correlations"])
 
     with tabs[0]:
         render_prediction_ui(model)
 
     with tabs[1]:
         render_feature_importance(model)
+
+    with tabs[2]:
+        render_correlation_heatmap(clean_df)
 
 
 if __name__ == "__main__":
