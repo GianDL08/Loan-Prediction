@@ -121,6 +121,11 @@ Provide the applicant profile below and click **Predict** to see the model's loa
             self_employed = st.selectbox(
                 "Self Employed", options=["Yes", "No"], index=1
             )
+            property_area = st.selectbox(
+                "Property Area",
+                options=["Urban", "Semiurban", "Rural"],
+                index=0,
+            )
 
         with col2:
             applicant_income = st.number_input(
@@ -138,11 +143,7 @@ Provide the applicant profile below and click **Predict** to see the model's loa
             credit_history = st.selectbox(
                 "Credit History", options=[0, 1], index=1
             )
-            property_area = st.selectbox(
-                "Property Area",
-                options=["Urban", "Semiurban", "Rural"],
-                index=0,
-            )
+            
 
         submitted = st.form_submit_button("Predict")
 
