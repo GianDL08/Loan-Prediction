@@ -64,6 +64,15 @@ def predict_from_inputs(model, inputs: dict) -> dict:
     """
     inputs = inputs.copy()
 
+    # Ensure numeric inputs are floats so downstream preprocessing behaves consistently.
+    # (JSON may deserialize whole numbers as int; sklearn pipelines expect floats.)
+    for col in ["applicant_income", "coapplicant_income", "loan_amount", "loan_amount_term"]:
+        if col in inputs:
+            try:
+                inputs[col] = float(inputs[col])
+            except (TypeError, ValueError):
+                pass
+
     if "applicant_income" in inputs and "coapplicant_income" in inputs:
         inputs["total_income"] = inputs["applicant_income"] + inputs["coapplicant_income"]
 
