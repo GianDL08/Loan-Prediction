@@ -149,10 +149,7 @@ Provide the applicant profile below and click **Predict** to see the model's loa
 
         result = predict_from_inputs(model, inputs)
 
-        st.subheader("Prediction")
-        st.write(f"**Loan Approved:** {result['prediction_label']}")
-
-        # Confidence / risk breakdown
+        # Metrics used to describe result
         approve_pct = result['approve_probability'] * 100
         reject_pct = result['reject_probability'] * 100
         confidence_pct = result['selected_probability'] * 100
@@ -188,17 +185,50 @@ Provide the applicant profile below and click **Predict** to see the model's loa
 
         risk_color = _risk_color(risk_score)
 
-        st.write(f"**Approval confidence:** {confidence_pct:.1f}%")
-        st.write(f"**Approval probability:** {approve_pct:.1f}%")
-        st.write(f"**Rejection probability:** {reject_pct:.1f}%")
+        approved = result['prediction_label'] == "Y"
+        status_color = "#218838" if approved else "#C82333"  # green / red
+        status_label = "APPROVED" if approved else "REJECTED"
 
-        # Display risk as a highlighted badge / bar
-        st.markdown(
-            f"<div style='padding:12px;border-radius:10px;background: {risk_color}; color: #000;'>"
-            f"<strong>Risk estimate (if accepted):</strong> {risk_score:.1f}% ({risk_tier} risk)"
-            f"</div>",
-            unsafe_allow_html=True,
-        )
+        st.subheader("Prediction")
+
+        # Layout: status badge + details
+        col_status, col_details = st.columns([1, 2])
+
+        with col_status:
+            st.markdown(
+                f"<div style='padding:18px 14px; border-radius:14px; background: {status_color}; color: #fff; text-align: center;'>"
+                f"<div style='font-size:22px; font-weight:600; margin-bottom:6px;'>{status_label}</div>"
+                f"<div style='font-size:14px; opacity:.9;'>Confidence: {confidence_pct:.1f}%</div>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+
+            # Risk bar (green -> red)
+            st.markdown(
+                f"<div style='margin-top:12px; padding:12px; border-radius:12px; background: #f5f5f5;'>"
+                f"<div style='font-weight:600; margin-bottom:6px;'>Risk estimate (if accepted)</div>"
+                f"<div style='position: relative; height: 16px; border-radius: 10px; background: #ddd;'>"
+                f"<div style='width: {risk_score:.1f}%; height: 100%; border-radius: 10px; background: {risk_color};'></div>"
+                f"</div>"
+                f"<div style='margin-top:6px; font-size:12px; opacity:.85;'>{risk_score:.1f}% ({risk_tier} risk)</div>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+
+        with col_details:
+            st.markdown(
+                "<div style='display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;'>"
+                f"<div style='padding:12px; border-radius:12px; background:#f2f8ff;'>"
+                f"<div style='font-size:12px; color:#333; font-weight:600;'>Approval probability</div>"
+                f"<div style='font-size:20px; font-weight:700; margin-top:6px;'>{approve_pct:.1f}%</div>"
+                f"</div>"
+                f"<div style='padding:12px; border-radius:12px; background:#fff1f1;'>"
+                f"<div style='font-size:12px; color:#333; font-weight:600;'>Rejection probability</div>"
+                f"<div style='font-size:20px; font-weight:700; margin-top:6px;'>{reject_pct:.1f}%</div>"
+                f"</div>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
 
 
 def main():
