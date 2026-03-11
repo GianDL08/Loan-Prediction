@@ -54,8 +54,14 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
             df.loc[:, col] = df[col].fillna(df[col].mode()[0])
 
     if "dependents" in df.columns:
-        df.loc[:, "dependents"] = pd.to_numeric(df["dependents"], errors="coerce")
-        df.loc[:, "dependents"] = df["dependents"].fillna(df["dependents"].median())
+        df["dependents"] = pd.to_numeric(df["dependents"], errors="coerce")
+        df["dependents"] = df["dependents"].fillna(df["dependents"].median())
+
+    # Ensure income columns are floats so the UI summary shows float dtypes.
+    for col in ["applicant_income", "coapplicant_income"]:
+        if col in df.columns:
+            df[col] = df[col].fillna(df[col].median())
+            df[col] = df[col].astype("float64")
 
     for col in ["loan_amount", "loan_amount_term"]:
         if col in df.columns:
