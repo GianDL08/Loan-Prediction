@@ -48,11 +48,11 @@ def build_or_load_model() -> tuple:
         model = joblib.load(MODEL_FILE)
         return model, report
 
-    model = joblib.load(MODEL_FILE)
-    # Recompute report to keep it consistent with the data
+    # Retrain the model to ensure it matches the current preprocessing/feature set.
     report = train_model.train_and_save(
         str(DATA_FILE), str(MODEL_FILE), return_report=True
     )
+    model = joblib.load(MODEL_FILE)
     return model, report
 
 
